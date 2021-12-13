@@ -1,0 +1,49 @@
+---
+- name: Redirect install packages
+  apt:
+    name: "{{ redirect__default_packages }}"
+    update_cache: yes
+    state: present
+  when: redirect__install
+
+- name: Redirect apache install packages
+  apt:
+    name: "{{ redirect__apache_default_packages }}"
+    update_cache: yes
+    state: present
+  when:
+    - redirect__install
+    - redirect__http_server == "apache"
+
+- name: Redirect nginx install packages
+  apt:
+    name: "{{ redirect__nginx_default_packages }}"
+    update_cache: yes
+    state: present
+  when:
+    - redirect__install
+    - redirect__http_server == "nginx"
+
+- name: Create apache configuration files
+  template:
+    src: apache.redirect
+    dest: "/etc/apache2/sites-available/{{ item.from_proto }}_{{ item.from }}"
+    mode: 0644
+  with_items: "{{ redirect__urls }}"
+  when:
+    - redirect__install
+    - redirect__configure
+    - redirect__http_server == "apache"
+
+- name: Create apache link service file
+  file:
+    path: "/etc/apache2/sites-enabled/{{ item.from_proto }}_{{ item.from }}.conf"
+    src: "/etc/apache2/sites-available/{{ item.from_proto }}_{{ item.from }}"
+    state: link
+  notify: Reload apache
+  with_items: "{{ redirect__urls }}"
+  when:
+    - redirect__install
+    - redirect__configure
+    - redirect__http_server == "apache"
+

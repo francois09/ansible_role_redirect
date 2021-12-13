@@ -1,0 +1,13 @@
+---
+# Default do nothing
+redirect__install: False
+redirect__configure: False
+
+# defaults file for redirect
+redirect__default_packages: []
+redirect__apache_default_packages:
+  - apache2
+redirect__nginx_default_packages:
+  - nginx
+
+redirect__http_server: apache # or nginx

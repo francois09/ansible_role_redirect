@@ -1,0 +1,4 @@
+<VirtualHost *:{% if item.from_proto == "http" %}80{% else %}443{% endif %}>
+	ServerName {{ item.from }}
+	Redirect permanent / {{ item.to_proto }}://{{ item.to }}/
+</VirtualHost>
