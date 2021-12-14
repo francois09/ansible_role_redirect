@@ -35,6 +35,17 @@
     - redirect__configure
     - redirect__http_server == "apache"
 
+- name: Create nginx configuration files
+  template:
+    src: nginx.redirect
+    dest: "/etc/nginx/sites-available/{{ item.from_proto }}_{{ item.from }}"
+    mode: 0644
+  with_items: "{{ redirect__urls }}"
+  when:
+    - redirect__install
+    - redirect__configure
+    - redirect__http_server == "nginx"
+
 - name: Create apache link service file
   file:
     path: "/etc/apache2/sites-enabled/{{ item.from_proto }}_{{ item.from }}.conf"
@@ -46,4 +57,16 @@
     - redirect__install
     - redirect__configure
     - redirect__http_server == "apache"
+
+- name: Create nginx link service file
+  file:
+    path: "/etc/nginx/sites-enabled/{{ item.from_proto }}_{{ item.from }}.conf"
+    src: "/etc/nginx/sites-available/{{ item.from_proto }}_{{ item.from }}"
+    state: link
+  notify: Reload nginx
+  with_items: "{{ redirect__urls }}"
+  when:
+    - redirect__install
+    - redirect__configure
+    - redirect__http_server == "nginx"
 
