@@ -1,0 +1,5 @@
+server {
+     listen {% if item.from_proto == "http" %}80{% else %}443{% endif %};
+     server_name {{ item.from }};
+     return 301 {{ item.to_proto }}://{{ item.to }}/
+}
