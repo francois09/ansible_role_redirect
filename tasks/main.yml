@@ -30,6 +30,7 @@
     dest: "/etc/apache2/sites-available/{{ item.from_proto }}_{{ item.from }}"
     mode: 0644
   with_items: "{{ redirect__urls }}"
+  notify: Reload apache
   when:
     - redirect__install
     - redirect__configure
@@ -41,6 +42,7 @@
     dest: "/etc/nginx/sites-available/{{ item.from_proto }}_{{ item.from }}"
     mode: 0644
   with_items: "{{ redirect__urls }}"
+  notify: Reload nginx
   when:
     - redirect__install
     - redirect__configure
