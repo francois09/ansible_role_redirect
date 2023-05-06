@@ -1,5 +1,9 @@
 server {
      listen {% if item.from_proto == "http" %}80{% else %}443{% endif %};
      server_name {{ item.from }};
+{% if item.from_proto == "http" %}
+     ssl_certificate /etc/letsencrypt/live/{{ item.from }}/fullchain.pem;
+     ssl_certificate_key /etc/letsencrypt/live/{{ item.from }}/privkey.pem;
+{% endif %}
      return 301 {{ item.to_proto }}://{{ item.to }}/;
 }
