@@ -1,6 +1,6 @@
 <VirtualHost *:{% if item.from_proto == "http" %}80{% else %}443{% endif %}>
 	ServerName {{ item.from }}
-	Redirect permanent / {{ item.to_proto }}://{{ item.to }}/
+	Redirect permanent "/" "{{ item.to_proto }}://{{ item.to }}"
 {% if item.from_proto == "https" %}
         # Include /etc/letsencrypt/options-ssl-apache.conf
         SSLCertificateFile /etc/letsencrypt/live/{{ item.from }}/fullchain.pem
